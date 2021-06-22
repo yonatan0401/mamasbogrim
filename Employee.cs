@@ -12,13 +12,19 @@ namespace mamasbogrim
         public string professionName { get; set; } 
         public double RiskPercentage { get; set; }
         public double[] MonthlyWorkingHours { get; }
+        public DateTime TempStartTime { get; set; }
+        public int Id { get; set; }
 
-        public Employee(string _EmployeeName, string _professionName, double _RiskPercentage)
+        public double EmployeehourlyRate { get; set; }
+
+        public Employee(string _EmployeeName, string _professionName, double _RiskPercentage, int _Id)
         {
             EmployeeName = _EmployeeName;
             professionName = _professionName;
             RiskPercentage = _RiskPercentage;
             MonthlyWorkingHours = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+            Id = _Id;
+            EmployeehourlyRate = Employee.MinimumWage;
         }
 
         /// <summary>
@@ -46,12 +52,24 @@ namespace mamasbogrim
         public double getCurrentIncome()
         {
             DateTime dt = DateTime.Now;
-            return MonthlyWorkingHours[dt.Month] * Employee.MinimumWage;
+            return MonthlyWorkingHours[dt.Month] * EmployeehourlyRate;
         }
-
         public override string ToString()
         {
-            return $"{EmployeeName} is an Employee with the profession of \"{professionName}\". his current monthly wage is:  {this.getCurrentIncome()} shekels.";
+            return $"{EmployeeName} is a common Employee.\nwith the profession of \"{professionName}\".\nhis current monthly wage is: {getCurrentIncome()} shekels.";
+        }
+
+        public override bool Equals(object obj)
+        {
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Employee employee = (Employee)obj;
+                return Id == employee.Id;
+            }
         }
     }
 }
