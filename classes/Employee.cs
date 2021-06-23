@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Text;
 
 namespace mamasbogrim
@@ -10,54 +11,30 @@ namespace mamasbogrim
         public string EmployeeName { get; set; }
         // public bool isManagement { get; set; } // is the employee in management or professional (cleaner, cooker / nurse, doctor  . . . )
         public string roleName { get; set; } 
-        public double RiskPercentage { get; set; }
-        public double[] MonthlyWorkingHours { get; }
-        public DateTime TempStartTime { get; set; }
         public int Id { get; set; }
         public double EmployeehourlyRate { get; set; }
 
-        public Employee(string _EmployeeName, string _professionName, double _RiskPercentage, int _Id)
+        public Employee(string _EmployeeName, string roleID)
         {
             EmployeeName = _EmployeeName;
-            roleName = _professionName;
-            RiskPercentage = _RiskPercentage;
-            MonthlyWorkingHours = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            Id = _Id;
-            EmployeehourlyRate = Employee.MinimumWage;
+            EmployeehourlyRate = MinimumWage;
+            // roleName = _professionName;
+            // Id = _Id;
         }
 
-        /// <summary>
-        /// This method adds time to the total working hour of the employee for this month.
-        /// </summary>
-        /// <param name="_startTime">Date time object that represents the start time</param>
-        /// <param name="_endTime">Date time object that represents the end time</param>
-        public void addWorkingHours(DateTime _startTime, DateTime _endTime)
-        {
-            DateTime startTime = _startTime;
-            DateTime endTime = _endTime;
-
-            Console.WriteLine("Adding working hours from " + startTime + " to " +  endTime + ".");
-
-            TimeSpan duration = endTime.Subtract(startTime);
-            
-            MonthlyWorkingHours[endTime.Month] += duration.Hours;
-
-        }
-      
         /// <summary>
         /// calculate the current monthes salery.
         /// </summary>
         /// <returns>The current months salery.</returns>
-        public double getCurrentIncome()
+       /* public double getCurrentIncome()
         {
             DateTime dt = DateTime.Now;
             return MonthlyWorkingHours[dt.Month] * EmployeehourlyRate;
-        }
+        }*/
         public override string ToString()
         {
-            return $"{EmployeeName} is a common Employee.\nwith the profession of \"{roleName}\".\nhis current monthly wage is: {getCurrentIncome()} shekels.";
+            return $"{EmployeeName} is a common Employee.\nwith the profession of \"{roleName}\".\nhis current monthly wage is: getCurrentIncome(change this to tamplate string when  the function is done) shekels.";
         }
-
         public override bool Equals(object obj)
         {
             if ((obj == null) || !this.GetType().Equals(obj.GetType()))

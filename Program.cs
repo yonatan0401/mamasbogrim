@@ -11,10 +11,12 @@ namespace mamasbogrim
     {
         static void Main(string[] args)
         {
-            Employee yonatan = new Employee("yonatan", "programer", 0.0, 0);
-            Maternityward Lis = new Maternityward("LIS");
+            //Maternityward Lis = new Maternityward("LIS");
 
-            Database dbObj = new Database();
+            Rank rank = new Rank(1);
+            //Employee yonatan = new Employee("yonatan", "programer", 0.0, 0);
+
+            /*DatabaseConnection dbObj = new DatabaseConnection();
             dbObj.openConnection();
             string query = "select role_name, rank_name, rank_bonus_percenrage from roles join ranks on roles.role_rank == ranks.ID ORDER BY(roles.roleID)";
 
@@ -23,12 +25,10 @@ namespace mamasbogrim
             while (result.Read())
             {
                 Console.WriteLine($"role_name: {result["role_name"]}, rank_name: {result["rank_name"]}, rank_bonus_percaentage: {result["rank_bonus_percenrage"]}");
-
             }
 
             dbObj.closeConnection();
-
-
+            */
 
             /*var value = ConfigurationManager.AppSettings["commonEmployee"];
             Console.WriteLine(value);
