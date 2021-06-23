@@ -24,10 +24,10 @@ namespace mamasbogrim.classes
         }
 
         /// <summary>
-        /// This method query's the db. 
+        /// This method query's the db.
         /// </summary>
-        /// <param name="queryString"></param>
-        /// <returns></returns>
+        /// <param name="queryString">The SQL statement to execute.</param>
+        /// <returns>The query result as a formated dictionery.</returns>
         public static Dictionary<string, List<Dictionary<string, string>>> Query(string queryString)
         {
             Dictionary<string, List<Dictionary<string, string>>> results = new Dictionary<string, List<Dictionary<string, string>>>();
@@ -50,16 +50,16 @@ namespace mamasbogrim.classes
                     tempDict.Add(keyNameList[i], $"{queryResult[i]}");
                     tempList.Add(tempDict);
                 }
-                results.Add($"{count}", tempList);
-               /* rankID = (int)(long)result["rankID"];
-                rankName = (string)result["rankName"];
-                rankPercentageBonus = (int)(long)result["rankPercentageBonus"];
-                Console.WriteLine($"rankID: {result["rankID"]}, rankName: {result["rankName"]}, rank_bonus_percaentage: {result["rankPercentageBonus"]} ");*/
+                results.Add($"{count}", tempList)
             }
             closeConnection();
             return results;
         }
 
+        /// <summary>
+        /// prints the given query result dict to the screen.
+        /// </summary>
+        /// <param name="queryResult">a list with the query results</param>
         public static void printQueryResults(Dictionary<string, List<Dictionary<string, string>>> queryResult)
         {
             foreach (KeyValuePair<string, List<Dictionary<string, string>>> kvp in queryResult)
