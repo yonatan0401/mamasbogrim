@@ -9,20 +9,19 @@ namespace mamasbogrim
         public static double MinimumWage = 29.19;
         public string EmployeeName { get; set; }
         // public bool isManagement { get; set; } // is the employee in management or professional (cleaner, cooker / nurse, doctor  . . . )
-        public string professionName { get; set; } 
+        public string roleName { get; set; } 
         public double RiskPercentage { get; set; }
         public double[] MonthlyWorkingHours { get; }
         public DateTime TempStartTime { get; set; }
         public int Id { get; set; }
-
         public double EmployeehourlyRate { get; set; }
 
         public Employee(string _EmployeeName, string _professionName, double _RiskPercentage, int _Id)
         {
             EmployeeName = _EmployeeName;
-            professionName = _professionName;
+            roleName = _professionName;
             RiskPercentage = _RiskPercentage;
-            MonthlyWorkingHours = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+            MonthlyWorkingHours = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             Id = _Id;
             EmployeehourlyRate = Employee.MinimumWage;
         }
@@ -56,7 +55,7 @@ namespace mamasbogrim
         }
         public override string ToString()
         {
-            return $"{EmployeeName} is a common Employee.\nwith the profession of \"{professionName}\".\nhis current monthly wage is: {getCurrentIncome()} shekels.";
+            return $"{EmployeeName} is a common Employee.\nwith the profession of \"{roleName}\".\nhis current monthly wage is: {getCurrentIncome()} shekels.";
         }
 
         public override bool Equals(object obj)
