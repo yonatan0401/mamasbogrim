@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SQLite;
 
 namespace mamasbogrim.classes
@@ -11,13 +12,19 @@ namespace mamasbogrim.classes
         public int rankPercentageBonus { get; set; }
         public Rank(int _rankID)
         {
-            string query = $"select * from ranks where rankID = {_rankID}";
+            string query = string.Format(ConfigurationManager.AppSettings.Get("getRankByID"), _rankID);
             Dictionary<string, List<Dictionary<string, string>>> result = DatabaseConnection.Query(query);
-            DatabaseConnection.printQueryResults(result);
-            /* rankID = (int)(long)result["rankID"];
- rankName = (string)result["rankName"];
- rankPercentageBonus = (int)(long)result["rankPercentageBonus"];
- Console.WriteLine($"rankID: {result["rankID"]}, rankName: {result["rankName"]}, rank_bonus_percaentage: {result["rankPercentageBonus"]} ");*/
+
+            //DatabaseConnection.printQueryResults(result);
+
+            rankID = Int32.Parse(result["0"][0]["rankID"]);
+            rankName = result["0"][1]["rankName"];
+            rankPercentageBonus = Int32.Parse(result["0"][2]["rankPercentageBonus"]);
+        }
+
+        public override string ToString()
+        {
+            return $"Rank object. rankID: {rankID} rankName: {rankName} rankPercentageBonus: {rankPercentageBonus}";
         }
     }
 }

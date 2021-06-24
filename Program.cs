@@ -1,9 +1,5 @@
-﻿using mamasbogrim.classes;
-using System;
-using System.Collections.Specialized;
-using System.Configuration;
-using System.Data.SQLite;
-
+﻿using System;
+using mamasbogrim.classes;
 
 namespace mamasbogrim
 {
@@ -13,7 +9,12 @@ namespace mamasbogrim
         {
             //Maternityward Lis = new Maternityward("LIS");
 
-            Rank rank = new Rank(1);
+            //Rank rank = new Rank(1);
+            //Role role = new Role(2);
+            Employee employee = new Employee(1);
+            Employee employeew = new Employee(2);
+            Console.WriteLine(employee);
+            Console.WriteLine(employeew);
             //Employee yonatan = new Employee("yonatan", "programer", 0.0, 0);
 
             /*DatabaseConnection dbObj = new DatabaseConnection();

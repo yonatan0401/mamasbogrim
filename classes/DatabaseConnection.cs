@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.IO
-    ;
+using System.IO;
+using System.Configuration;
+
 namespace mamasbogrim.classes
 {
     public static class DatabaseConnection
     {
-        public static SQLiteConnection myConnection = new SQLiteConnection("Data Source=C:\\Users\\yonat\\source\\repos\\mamasbogrim\\Maternityward.db");
+        public static SQLiteConnection myConnection = new SQLiteConnection($"Data Source={ConfigurationManager.AppSettings.Get("dbAdress")}");
         public static void openConnection()
         {
             if(myConnection.State != System.Data.ConnectionState.Open)
@@ -42,7 +43,6 @@ namespace mamasbogrim.classes
             }
             while (queryResult.Read())
             {
-                //results.Add($"{count}", "");
                 List<Dictionary<string, string>> tempList = new List<Dictionary<string, string>>();
                 for (int i = 0; i < keyNameList.Count; i++)
                 {
@@ -50,7 +50,8 @@ namespace mamasbogrim.classes
                     tempDict.Add(keyNameList[i], $"{queryResult[i]}");
                     tempList.Add(tempDict);
                 }
-                results.Add($"{count}", tempList)
+                results.Add($"{count}", tempList);
+                count++;
             }
             closeConnection();
             return results;

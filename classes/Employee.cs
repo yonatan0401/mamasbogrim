@@ -1,5 +1,7 @@
-﻿using System;
+﻿using mamasbogrim.classes;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SQLite;
 using System.Text;
 
@@ -8,18 +10,22 @@ namespace mamasbogrim
     class Employee
     {
         public static double MinimumWage = 29.19;
-        public string EmployeeName { get; set; }
-        // public bool isManagement { get; set; } // is the employee in management or professional (cleaner, cooker / nurse, doctor  . . . )
-        public string roleName { get; set; } 
-        public int Id { get; set; }
+        public string employeeName { get; set; }
+        public Role employeeRole { get; set; } 
+        public int employeeID { get; set; }
         public double EmployeehourlyRate { get; set; }
 
-        public Employee(string _EmployeeName, string roleID)
+        public Employee(int _employeeID)
         {
-            EmployeeName = _EmployeeName;
             EmployeehourlyRate = MinimumWage;
-            // roleName = _professionName;
-            // Id = _Id;
+            string employeeQuery = string.Format(ConfigurationManager.AppSettings.Get("getEmployeeByID"), _employeeID);
+            Dictionary<string, List<Dictionary<string, string>>> result = DatabaseConnection.Query(employeeQuery);
+
+            // DatabaseConnection.printQueryResults(result);
+            
+            employeeID = Int32.Parse(result["0"][0]["employeeID"]);
+            employeeName = result["0"][1]["employeeName"];
+            employeeRole = new Role(Int32.Parse(result["0"][2]["roleID"]));
         }
 
         /// <summary>
@@ -33,9 +39,9 @@ namespace mamasbogrim
         }*/
         public override string ToString()
         {
-            return $"{EmployeeName} is a common Employee.\nwith the profession of \"{roleName}\".\nhis current monthly wage is: getCurrentIncome(change this to tamplate string when  the function is done) shekels.";
+            return $"{employeeName} is an Employee.\nwith the profession of \"{employeeRole.roleName}\".\nhis current monthly wage is: getCurrentIncome(change this to tamplate string when  the function is done) shekels.";
         }
-        public override bool Equals(object obj)
+       /* public override bool Equals(object obj)
         {
             if ((obj == null) || !this.GetType().Equals(obj.GetType()))
             {
@@ -44,8 +50,8 @@ namespace mamasbogrim
             else
             {
                 Employee employee = (Employee)obj;
-                return Id == employee.Id;
+                return employeeID == employee.employeeID;
             }
-        }
+        }*/
     }
 }
