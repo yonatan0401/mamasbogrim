@@ -43,5 +43,17 @@ namespace mamasbogrim.classes
             }
             return temp;
         }
+
+        public bool isRankInRole(int rankID)
+        {
+            for (int i = 0; i < rankList.Count; i++)
+            {
+                if(rankList[i].rankID == rankID)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

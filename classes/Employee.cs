@@ -10,6 +10,8 @@ namespace mamasbogrim
     class Employee
     {
         public static double MinimumWage = 29.19;
+
+        public static double managerHours = 200.0;
         public string employeeName { get; set; }
         public Role employeeRole { get; set; } 
         public int employeeID { get; set; }
@@ -37,30 +39,45 @@ namespace mamasbogrim
         {
             string workingHoursQuery = string.Format(ConfigurationManager.AppSettings.Get("getCurrentMonthWorkingHours"), employeeID);
             Dictionary<string, List<Dictionary<string, string>>> result = DatabaseConnection.Query(workingHoursQuery);
+
             // DatabaseConnection.printQueryResults(result);
-            double basicSalery = double.Parse(result["0"][0]["totalShiftLengthInHours"]) * EmployeehourlyRate;
-            return basicSalery;
+            if (employeeRole.isRankInRole(5))
+            {
+                //if role is manager use 200 hours.
+                return getMoney(managerHours);
+            }
+            else if (employeeRole.isRankInRole(4))
+            {
+                //if role is decition maker use 200 hours if hours is > 50.
+                double totalHours = double.Parse(result["0"][0]["totalShiftLengthInHours"]);
+                if (totalHours > 50)
+                {
+                    return getMoney(managerHours);
+                }
+                else
+                {
+                    double totalBonus = getTotalBonusPercentage() - 50; // remove the bonus.
+                    return (totalHours * EmployeehourlyRate) * ((totalBonus + 100) / 100);
+                }
+            }
+            return getMoney(double.Parse(result["0"][0]["totalShiftLengthInHours"]));
         }
-        /// <summary>
-        /// calculate the current monthes salery.
-        /// </summary>
-        /// <returns>The current months salery.</returns>
-        /* public double getCurrentIncome()
-         {
-             DateTime dt = DateTime.Now;
-             return MonthlyWorkingHours[dt.Month] * EmployeehourlyRate;
-         }*/
-        /* public override bool Equals(object obj)
-         {
-             if ((obj == null) || !this.GetType().Equals(obj.GetType()))
-             {
-                 return false;
-             }
-             else
-             {
-                 Employee employee = (Employee)obj;
-                 return employeeID == employee.employeeID;
-             }
-         }*/
+
+        private double getMoney(double hours)
+        {
+            double basicAmont = hours * EmployeehourlyRate;
+            return basicAmont * ((getTotalBonusPercentage() / 100) + 1);
+        }
+
+        public double getTotalBonusPercentage()
+        {
+            double totalPercentage = 0;
+
+            for (int i = 0; i < employeeRole.rankList.Count; i++)
+            {
+                totalPercentage += (double) employeeRole.rankList[i].rankPercentageBonus;  
+            }
+            return totalPercentage;
+        }
     }
 }

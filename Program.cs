@@ -12,10 +12,11 @@ namespace mamasbogrim
             //Rank rank = new Rank(1);
             //Role role = new Role(2);
             Employee employee = new Employee(1);
-            Employee employeew = new Employee(2);
+            Employee employeew = new Employee(3);
             /*Console.WriteLine(employee);
             Console.WriteLine(employeew);*/
             Console.WriteLine(employee.getCurrentMonthSalery());
+            Console.WriteLine(employeew.getCurrentMonthSalery());
             //Employee yonatan = new Employee("yonatan", "programer", 0.0, 0);
 
             /*DatabaseConnection dbObj = new DatabaseConnection();
