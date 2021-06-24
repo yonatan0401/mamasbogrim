@@ -13,8 +13,9 @@ namespace mamasbogrim
             //Role role = new Role(2);
             Employee employee = new Employee(1);
             Employee employeew = new Employee(2);
-            Console.WriteLine(employee);
-            Console.WriteLine(employeew);
+            /*Console.WriteLine(employee);
+            Console.WriteLine(employeew);*/
+            Console.WriteLine(employee.getCurrentMonthSalery());
             //Employee yonatan = new Employee("yonatan", "programer", 0.0, 0);
 
             /*DatabaseConnection dbObj = new DatabaseConnection();
