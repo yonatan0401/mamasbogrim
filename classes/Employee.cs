@@ -169,5 +169,12 @@ namespace mamasbogrim
             }
             return totalPercentage;
         }
+    
+        public int getTotalWorkingHours()
+        {
+            string workingHoursQuery = string.Format(ConfigurationManager.AppSettings.Get("getCurrentMonthWorkingHours"), employeeID);
+            Dictionary<string, List<Dictionary<string, string>>> result = DatabaseConnection.Query(workingHoursQuery);
+            return int.Parse(result["0"][0]["totalShiftLengthInHours"]);
+        }
     }
 }

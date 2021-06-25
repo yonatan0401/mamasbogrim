@@ -7,7 +7,8 @@ namespace mamasbogrim.classes
     class menu
     {
         public static string smallMergin = "\t";
-        public static string bigMergin = "\t\t\t\t";
+        public static string bigMergin = "\t\t";
+        static int tableWidth = 100;
         public static void manageMaternityward()
         {
             Maternityward Echilov = new Maternityward("Echilov");
@@ -26,7 +27,7 @@ namespace mamasbogrim.classes
                             welcomMenu(Echilov);
                             break;
                         case 1:
-                            Console.WriteLine("shess");
+                            maternitywardStats(Echilov);
                             break;
                         case 2:
                             employeeMenu(Echilov);
@@ -45,7 +46,58 @@ namespace mamasbogrim.classes
             Console.WriteLine("Plese enter one of the following to navigate throw the system:");
             Console.WriteLine(smallMergin + "1. Total maternityward statistics. ");
             Console.WriteLine(smallMergin + "2. Employee Menu. ");
-        } 
+        }
+
+
+        static void maternitywardStats(Maternityward maternityward)
+        {
+            //Console.Clear();
+            PrintLine();
+            PrintRow( "employee name", "role", "Working Hours", "Monthly salery");
+            for (int i = 0; i < maternityward.EmployeeList.Count; i++)
+            {
+                string employeeTempID = maternityward.EmployeeList[i].employeeID.ToString();
+                string employeeTempName = maternityward.EmployeeList[i].employeeName;
+                string employeeTempRoleName = maternityward.EmployeeList[i].employeeRole.roleName;
+                string employeeTempWorkingHours = maternityward.EmployeeList[i].getTotalWorkingHours().ToString();
+                string employeeTempMonthlySalery = maternityward.EmployeeList[i].getCurrentMonthSalery().ToString();
+                PrintLine();
+                PrintRow("", "", "", "");
+                PrintRow(employeeTempName, employeeTempRoleName, employeeTempWorkingHours, employeeTempMonthlySalery);
+                PrintRow("", "", "", "");
+                PrintLine();
+            }
+            Console.ReadLine();
+        }
+        static void PrintLine()
+        {
+            Console.WriteLine(new string('-', tableWidth));
+        }
+        static void PrintRow(params string[] columns)
+        {
+            int width = (tableWidth - columns.Length) / columns.Length;
+            string row = "|";
+
+            foreach (string column in columns)
+            {
+                row += AlignCentre(column, width) + "|";
+            }
+
+            Console.WriteLine(row);
+        }
+        static string AlignCentre(string text, int width)
+        {
+            text = text.Length > width ? text.Substring(0, width - 3) + "..." : text;
+
+            if (string.IsNullOrEmpty(text))
+            {
+                return new string(' ', width);
+            }
+            else
+            {
+                return text.PadRight(width - (width - text.Length) / 2).PadLeft(width);
+            }
+        }
 
         public static void employeeMenu(Maternityward maternityward)
         {
@@ -262,6 +314,10 @@ namespace mamasbogrim.classes
             try
             {
                 DateTime dt = DateTime.Parse(date);
+                if (date.Length != 19)
+                {
+                    throw new InvalidOperationException();
+                }
                 return true;
             }
             catch (Exception)
