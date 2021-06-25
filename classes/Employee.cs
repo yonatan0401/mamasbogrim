@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SQLite;
-using System.Text;
 
 namespace mamasbogrim
 {
@@ -17,14 +15,19 @@ namespace mamasbogrim
         public int employeeID { get; set; }
         public double EmployeehourlyRate { get; set; }
 
+        public bool isInShift;
+
         public Employee(int _employeeID)
         {
             EmployeehourlyRate = MinimumWage;
             string employeeQuery = string.Format(ConfigurationManager.AppSettings.Get("getEmployeeByID"), _employeeID);
-            Dictionary<string, List<Dictionary<string, string>>> result = DatabaseConnection.Query(employeeQuery);
+            string isInShiftQuery = string.Format(ConfigurationManager.AppSettings.Get("isInShift"), _employeeID);
 
-            // DatabaseConnection.printQueryResults(result);
-            
+            Dictionary<string, List<Dictionary<string, string>>> result = DatabaseConnection.Query(employeeQuery);
+            Dictionary<string, List<Dictionary<string, string>>> isInShiftResult = DatabaseConnection.Query(isInShiftQuery);
+
+            //DatabaseConnection.printQueryResults(isInShiftResult);
+            isInShift = int.Parse(isInShiftResult["0"][0]["result"]) == 1 ? true : false;
             employeeID = Int32.Parse(result["0"][0]["employeeID"]);
             employeeName = result["0"][1]["employeeName"];
             employeeRole = new Role(Int32.Parse(result["0"][2]["roleID"]));
@@ -32,9 +35,60 @@ namespace mamasbogrim
         }
         public override string ToString()
         {
-            return $"{employeeName} is an Employee.\nwith the profession of \"{employeeRole.roleName}\".\nhis current monthly wage is: getCurrentIncome(change this to tamplate string when  the function is done) shekels.";
+            return $"{employeeName} is an Employee.\nwith the profession of \"{employeeRole.roleName}\".\nhis current monthly wage is: {getCurrentMonthSalery()} shekels.";
         }
 
+        public bool startShift()
+        {
+            try
+            {
+                if (!isInShift)
+                {
+                    string query = string.Format(ConfigurationManager.AppSettings.Get("startShift"), employeeID);
+                    Console.WriteLine(query);
+                    Console.WriteLine("Rows inserted " + DatabaseConnection.insert(query));
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Cannot start Shift, employee alredy in shift");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex); 
+                return false;
+            }
+        }
+
+        public bool finishShift()
+        {
+            try
+            {
+                if (isInShift)
+                {
+                    string query = string.Format(ConfigurationManager.AppSettings.Get("finishShift"), employeeID, DateTime.Now.ToString());
+                    Console.WriteLine(query);
+                    Console.WriteLine("Rows updated " + DatabaseConnection.insert(query)); 
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Cannot Finish Shift, employee not in shift");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+        /// <summary>
+        /// calculates current month salery with all the needed bonus.
+        /// </summary>
+        /// <returns>This monthe salery.</returns>
         public double getCurrentMonthSalery()
         {
             string workingHoursQuery = string.Format(ConfigurationManager.AppSettings.Get("getCurrentMonthWorkingHours"), employeeID);
@@ -56,8 +110,8 @@ namespace mamasbogrim
                 }
                 else
                 {
-                    double totalBonus = getTotalBonusPercentage() - 50; // remove the bonus.
-                    return (totalHours * EmployeehourlyRate) * ((totalBonus + 100) / 100);
+                    double totalBonus = getTotalBonusPercentage() - 50; // remove the desition maker bonus.
+                    return Math.Round((totalHours * EmployeehourlyRate) * ((totalBonus / 100) + 1), 3);
                 }
             }
             return getMoney(double.Parse(result["0"][0]["totalShiftLengthInHours"]));
@@ -66,7 +120,7 @@ namespace mamasbogrim
         private double getMoney(double hours)
         {
             double basicAmont = hours * EmployeehourlyRate;
-            return basicAmont * ((getTotalBonusPercentage() / 100) + 1);
+            return Math.Round(basicAmont * ((getTotalBonusPercentage() / 100) + 1), 3);
         }
 
         public double getTotalBonusPercentage()

@@ -7,6 +7,9 @@ namespace mamasbogrim.classes
 {
     class Role
     {
+        /// <summary>
+        /// This class represents a Role in this exercise.
+        /// </summary>
         public int roleID { get; set; }
         public string roleName { get; set; }
         public List<Rank> rankList { get; }

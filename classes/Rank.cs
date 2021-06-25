@@ -7,6 +7,9 @@ namespace mamasbogrim.classes
 {
     class Rank
     {
+        /// <summary>
+        /// This class represents a Rank in this exersice.
+        /// </summary>
         public int rankID { get; set; }
         public string rankName { get; set; }
         public int rankPercentageBonus { get; set; }

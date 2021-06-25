@@ -1,5 +1,7 @@
-﻿using System;
+﻿using mamasbogrim.classes;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Text;
 
 namespace mamasbogrim
@@ -35,18 +37,24 @@ namespace mamasbogrim
             EmployeeList.Add(Employee);
         }
 
-       /* public void EmployeeLogIn(Employee employee)
+        public void EmployeeLogIn(Employee employee)
         {
-            LoggedInEmployees.Add(employee);
-            employee.TempStartTime = DateTime.Now;
+            //employee.TempStartTime = DateTime.Now;
             Console.WriteLine("Employee logged in sucsessfully at " + DateTime.Now + ".");
-        }*/
+        }
 
-       /* public void EmployeeLogOut(Employee employee)
+        public void EmployeeLogOut(Employee employee)
         {
-            LoggedInEmployees.Remove(employee);
-            employee.addWorkingHours(employee.TempStartTime, DateTime.Now);
-            Console.WriteLine("Employee logged out sucsessfully at " + DateTime.Now + ".");
-        }*/
+        }
+
+        public void loadEmployees()
+        {
+            Dictionary<string, List<Dictionary<string, string>>> result = DatabaseConnection.Query(ConfigurationManager.AppSettings.Get("loadEmployees"));
+            //DatabaseConnection.printQueryResults(result);
+            for (int i = 0; i < result.Count; i++)
+            {
+                EmployeeList.Add(new Employee(int.Parse(result[i.ToString()][0]["employeeID"])));
+            }
+        }
     }
 }

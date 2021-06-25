@@ -1,26 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.IO;
 using System.Configuration;
 
 namespace mamasbogrim.classes
 {
     public static class DatabaseConnection
     {
-        public static SQLiteConnection myConnection = new SQLiteConnection($"Data Source={ConfigurationManager.AppSettings.Get("dbAdress")}");
+        public static SQLiteConnection myConnection = new SQLiteConnection(ConfigurationManager.ConnectionStrings["dbAdress"].ConnectionString);
         public static void openConnection()
         {
-            if(myConnection.State != System.Data.ConnectionState.Open)
+            try
             {
-                myConnection.Open();
+                if (myConnection.State != System.Data.ConnectionState.Open)
+                {
+                    myConnection.Open();
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Faild to open connection to the database.");
+                throw;
             }
         }
         public static void closeConnection()
         {
-            if(myConnection.State != System.Data.ConnectionState.Closed)
+            try
             {
-                myConnection.Close();
+                if (myConnection.State != System.Data.ConnectionState.Closed)
+                {
+                    myConnection.Close();
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Faild to close connection to the database.");
+                throw;
             }
         }
 
@@ -55,6 +70,15 @@ namespace mamasbogrim.classes
             }
             closeConnection();
             return results;
+        }
+
+        public static int insert(string query)
+        {
+            SQLiteCommand sql = new SQLiteCommand(query, myConnection);
+            openConnection();
+            int result = sql.ExecuteNonQuery();
+            closeConnection();
+            return result;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using mamasbogrim.classes;
 
 namespace mamasbogrim
@@ -7,16 +8,21 @@ namespace mamasbogrim
     {
         static void Main(string[] args)
         {
-            //Maternityward Lis = new Maternityward("LIS");
-
+            Maternityward Lis = new Maternityward("LIS");
+            Lis.loadEmployees();
+            Employee employee = new Employee(1);
+            employee.finishShift();
+           /* for (int l = 0; l < Lis.EmployeeList.Count; l++)
+            {
+                Lis.EmployeeList[l].finishShift();
+            }*/
             //Rank rank = new Rank(1);
             //Role role = new Role(2);
-            Employee employee = new Employee(1);
-            Employee employeew = new Employee(3);
+            //Employee employeew = new Employee(2);
             /*Console.WriteLine(employee);
             Console.WriteLine(employeew);*/
-            Console.WriteLine(employee.getCurrentMonthSalery());
-            Console.WriteLine(employeew.getCurrentMonthSalery());
+            //Console.WriteLine(employee.getCurrentMonthSalery());
+            //Console.WriteLine(employeew.getCurrentMonthSalery());
             //Employee yonatan = new Employee("yonatan", "programer", 0.0, 0);
 
             /*DatabaseConnection dbObj = new DatabaseConnection();
