@@ -8,10 +8,11 @@ namespace mamasbogrim
     {
         static void Main(string[] args)
         {
-            Maternityward Lis = new Maternityward("LIS");
-            Lis.loadEmployees();
-            Employee employee = new Employee(1);
-            employee.finishShift();
+            menu.manageMaternityward();
+            //Maternityward Lis = new Maternityward("LIS");
+            
+            //Employee employee = new Employee(1);
+            //employee.finishShift();
            /* for (int l = 0; l < Lis.EmployeeList.Count; l++)
             {
                 Lis.EmployeeList[l].finishShift();

@@ -35,9 +35,30 @@ namespace mamasbogrim
         }
         public override string ToString()
         {
-            return $"{employeeName} is an Employee.\nwith the profession of \"{employeeRole.roleName}\".\nhis current monthly wage is: {getCurrentMonthSalery()} shekels.";
+            return $"\n{employeeName} is an Employee.\nwith the profession of \"{employeeRole.roleName}\".\nhis current monthly wage is: {getCurrentMonthSalery()}. \n";
         }
 
+        /// <summary>
+        /// insert a full shift with given start and end time
+        /// </summary>
+        /// <param name="startTime">start time as a string</param>
+        /// <param name="endTime">end time as a string</param>
+        /// <returns>true if inserted secsessfully false if not</returns>
+        public bool insertFullShift(string startTime, string endTime)
+        {
+            string query = string.Format(ConfigurationManager.AppSettings.Get("newShift"), employeeID, startTime, endTime);
+            int quertResult = DatabaseConnection.insert(query);
+            if (quertResult > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Starts the employees shift - inserting a new shift to enteries table.
+        /// </summary>
+        /// <returns>True if insert succsessfully false if not</returns>
         public bool startShift()
         {
             try
@@ -45,13 +66,16 @@ namespace mamasbogrim
                 if (!isInShift)
                 {
                     string query = string.Format(ConfigurationManager.AppSettings.Get("startShift"), employeeID);
-                    Console.WriteLine(query);
-                    Console.WriteLine("Rows inserted " + DatabaseConnection.insert(query));
+                    int quertResult = DatabaseConnection.insert(query);
+                    if (quertResult > 0)
+                    {
+                    isInShift = true;
                     return true;
+                    }
+                    return false;
                 }
                 else
                 {
-                    Console.WriteLine("Cannot start Shift, employee alredy in shift");
                     return false;
                 }
             }
@@ -62,6 +86,10 @@ namespace mamasbogrim
             }
         }
 
+        /// <summary>
+        /// Inserts into the db the current time to finish the employee's shift.
+        /// </summary>
+        /// <returns>True if update was done false if faild</returns>
         public bool finishShift()
         {
             try
@@ -69,9 +97,13 @@ namespace mamasbogrim
                 if (isInShift)
                 {
                     string query = string.Format(ConfigurationManager.AppSettings.Get("finishShift"), employeeID, DateTime.Now.ToString());
-                    Console.WriteLine(query);
-                    Console.WriteLine("Rows updated " + DatabaseConnection.insert(query)); 
-                    return true;
+                    int quertResult = DatabaseConnection.insert(query);
+                    if (quertResult > 0)
+                    {
+                        isInShift = false;
+                        return true;
+                    }
+                    return false;
                 }
                 else
                 {
@@ -123,6 +155,10 @@ namespace mamasbogrim
             return Math.Round(basicAmont * ((getTotalBonusPercentage() / 100) + 1), 3);
         }
 
+        /// <summary>
+        /// calculates the total bonus percentage by the ranks.
+        /// </summary>
+        /// <returns>the total bonus percentage</returns>
         public double getTotalBonusPercentage()
         {
             double totalPercentage = 0;

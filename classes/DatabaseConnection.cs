@@ -8,6 +8,9 @@ namespace mamasbogrim.classes
     public static class DatabaseConnection
     {
         public static SQLiteConnection myConnection = new SQLiteConnection(ConfigurationManager.ConnectionStrings["dbAdress"].ConnectionString);
+        /// <summary>
+        /// opens a connection to the db.
+        /// </summary>
         public static void openConnection()
         {
             try
@@ -23,6 +26,9 @@ namespace mamasbogrim.classes
                 throw;
             }
         }
+        /// <summary>
+        /// closes the connection to the DB.
+        /// </summary>
         public static void closeConnection()
         {
             try
@@ -72,6 +78,11 @@ namespace mamasbogrim.classes
             return results;
         }
 
+        /// <summary>
+        /// use this to insert / update the db.
+        /// </summary>
+        /// <param name="query">query string</param>
+        /// <returns>the number of effected rows</returns>
         public static int insert(string query)
         {
             SQLiteCommand sql = new SQLiteCommand(query, myConnection);
