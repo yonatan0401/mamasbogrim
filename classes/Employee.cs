@@ -14,9 +14,7 @@ namespace mamasbogrim
         public Role employeeRole { get; set; } 
         public int employeeID { get; set; }
         public double EmployeehourlyRate { get; set; }
-
         public bool isInShift;
-
         public Employee(int _employeeID)
         {
             EmployeehourlyRate = MinimumWage;
@@ -54,7 +52,6 @@ namespace mamasbogrim
             }
             return false;
         }
-
         /// <summary>
         /// Starts the employees shift - inserting a new shift to enteries table.
         /// </summary>
@@ -85,7 +82,6 @@ namespace mamasbogrim
                 return false;
             }
         }
-
         /// <summary>
         /// Inserts into the db the current time to finish the employee's shift.
         /// </summary>
@@ -123,10 +119,6 @@ namespace mamasbogrim
         /// <returns>This monthe salery.</returns>
         public double getCurrentMonthSalery()
         {
-            string workingHoursQuery = string.Format(ConfigurationManager.AppSettings.Get("getCurrentMonthWorkingHours"), employeeID);
-            Dictionary<string, List<Dictionary<string, string>>> result = DatabaseConnection.Query(workingHoursQuery);
-
-            // DatabaseConnection.printQueryResults(result);
             if (employeeRole.isRankInRole(5))
             {
                 //if role is manager use 200 hours.
@@ -135,7 +127,7 @@ namespace mamasbogrim
             else if (employeeRole.isRankInRole(4))
             {
                 //if role is decition maker use 200 hours if hours is > 50.
-                double totalHours = double.Parse(result["0"][0]["totalShiftLengthInHours"]);
+                double totalHours = getTotalWorkingHours();
                 if (totalHours > 50)
                 {
                     return getMoney(managerHours);
@@ -146,9 +138,8 @@ namespace mamasbogrim
                     return Math.Round((totalHours * EmployeehourlyRate) * ((totalBonus / 100) + 1), 3);
                 }
             }
-            return getMoney(double.Parse(result["0"][0]["totalShiftLengthInHours"]));
+            return getMoney(getTotalWorkingHours());
         }
-
         private double getMoney(double hours)
         {
             double basicAmont = hours * EmployeehourlyRate;
@@ -169,12 +160,34 @@ namespace mamasbogrim
             }
             return totalPercentage;
         }
-    
-        public int getTotalWorkingHours()
+        /// <summary>
+        /// gets the total working hours for an employee
+        /// </summary>
+        /// <returns></returns>
+        public double getTotalWorkingHours()
         {
             string workingHoursQuery = string.Format(ConfigurationManager.AppSettings.Get("getCurrentMonthWorkingHours"), employeeID);
             Dictionary<string, List<Dictionary<string, string>>> result = DatabaseConnection.Query(workingHoursQuery);
-            return int.Parse(result["0"][0]["totalShiftLengthInHours"]);
+            
+            double TotalHours = double.Parse(result["0"][0]["totalShiftLengthInHours"]);
+            
+            if (isInShift)
+            {
+                try
+                {
+                string startTimeQuery = string.Format(ConfigurationManager.AppSettings.Get("getStartTime"), employeeID);
+                Dictionary<string, List<Dictionary<string, string>>> startTimeQueryResult = DatabaseConnection.Query(startTimeQuery);
+                DateTime startTime = DateTime.Parse(startTimeQueryResult["0"][0]["startTime"]);
+                DateTime endTime = DateTime.Now;
+                TimeSpan ts = endTime - startTime;
+                TotalHours += ts.TotalHours;
+                }
+                catch (Exception)
+                {
+                    return TotalHours;
+                }
+            }
+            return TotalHours;
         }
     }
 }

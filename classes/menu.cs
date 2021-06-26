@@ -48,7 +48,10 @@ namespace mamasbogrim.classes
             Console.WriteLine(smallMergin + "2. Employee Menu. ");
         }
 
-
+        /// <summary>
+        /// Prints a table of all the employees in the maternityward. 
+        /// </summary>
+        /// <param name="maternityward">the maternityward to print</param>
         static void maternitywardStats(Maternityward maternityward)
         {
             //Console.Clear();
@@ -56,7 +59,6 @@ namespace mamasbogrim.classes
             PrintRow( "employee name", "role", "Working Hours", "Monthly salery");
             for (int i = 0; i < maternityward.EmployeeList.Count; i++)
             {
-                string employeeTempID = maternityward.EmployeeList[i].employeeID.ToString();
                 string employeeTempName = maternityward.EmployeeList[i].employeeName;
                 string employeeTempRoleName = maternityward.EmployeeList[i].employeeRole.roleName;
                 string employeeTempWorkingHours = maternityward.EmployeeList[i].getTotalWorkingHours().ToString();
@@ -98,7 +100,6 @@ namespace mamasbogrim.classes
                 return text.PadRight(width - (width - text.Length) / 2).PadLeft(width);
             }
         }
-
         public static void employeeMenu(Maternityward maternityward)
         {
             int userInput = 1;
