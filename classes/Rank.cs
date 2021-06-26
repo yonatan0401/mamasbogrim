@@ -24,7 +24,6 @@ namespace mamasbogrim.classes
             rankName = result["0"][1]["rankName"];
             rankPercentageBonus = Int32.Parse(result["0"][2]["rankPercentageBonus"]);
         }
-
         public override string ToString()
         {
             return $"Rank object. rankID: {rankID} rankName: {rankName} rankPercentageBonus: {rankPercentageBonus}";
