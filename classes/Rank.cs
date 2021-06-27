@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SQLite;
 
 namespace mamasbogrim.classes
 {
@@ -17,8 +16,6 @@ namespace mamasbogrim.classes
         {
             string query = string.Format(ConfigurationManager.AppSettings.Get("getRankByID"), _rankID);
             Dictionary<string, List<Dictionary<string, string>>> result = DatabaseConnection.Query(query);
-
-            //DatabaseConnection.printQueryResults(result);
 
             rankID = Int32.Parse(result["0"][0]["rankID"]);
             rankName = result["0"][1]["rankName"];
