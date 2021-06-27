@@ -22,9 +22,6 @@ namespace mamasbogrim.classes
             
             Dictionary<string, List<Dictionary<string, string>>> result = DatabaseConnection.Query(roleQuery);
             Dictionary<string, List<Dictionary<string, string>>> rankQueryResult = DatabaseConnection.Query(rankQuery);
-           
-            // DatabaseConnection.printQueryResults(result);
-            // DatabaseConnection.printQueryResults(rankQueryResult);
 
             roleID = Int32.Parse(result["0"][0]["roleID"]);
             roleName = result["0"][1]["roleName"];
@@ -47,6 +44,11 @@ namespace mamasbogrim.classes
             return temp;
         }
 
+        /// <summary>
+        /// Gets a rank id and returns if the role contains the rank.
+        /// </summary>
+        /// <param name="rankID"></param>
+        /// <returns>True if role contains given rank false if not.</returns>
         public bool isRankInRole(int rankID)
         {
             for (int i = 0; i < rankList.Count; i++)

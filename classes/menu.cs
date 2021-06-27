@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace mamasbogrim.classes
 {
@@ -73,7 +72,7 @@ namespace mamasbogrim.classes
         }
         static void PrintLine()
         {
-            Console.WriteLine(new string('-', tableWidth));
+            Console.WriteLine( smallMergin + new string('-', tableWidth));
         }
         static void PrintRow(params string[] columns)
         {
@@ -85,7 +84,7 @@ namespace mamasbogrim.classes
                 row += AlignCentre(column, width) + "|";
             }
 
-            Console.WriteLine(row);
+            Console.WriteLine(smallMergin + row);
         }
         static string AlignCentre(string text, int width)
         {
@@ -103,16 +102,18 @@ namespace mamasbogrim.classes
         public static void employeeMenu(Maternityward maternityward)
         {
             int userInput = 1;
-            Console.Clear();
             while (userInput != 0)
             {
+                Console.Clear();
                 Console.WriteLine("Welcom to the employee menu.");
                 Console.WriteLine("Plese enter one of the following to navigate the menu:");
                 Console.WriteLine(smallMergin + "1. Swipe an employee's card to log in and out of shift.");
                 Console.WriteLine(smallMergin + "2. Get an employees current income.");
                 Console.WriteLine(smallMergin + "3. Save new shift with desierd start and end time.");
+                Console.WriteLine(smallMergin + "4. Get employee's yearly salery.");
+
                 string newInput = Console.ReadLine();
-                if (isValidInput(newInput, new List<int> { 0, 1, 2, 3 }))
+                if (isValidInput(newInput, new List<int> { 0, 1, 2, 3, 4 }))
                 {
                     userInput = int.Parse(newInput);
                     switch (userInput)
@@ -128,6 +129,9 @@ namespace mamasbogrim.classes
                         case 3:
                             insertFullEmployeeShift(maternityward);
                             Console.Clear();
+                            break;
+                        case 4:
+                            getEmployeeYearlySalery(maternityward);
                             break;
                         default:
                             Console.WriteLine("something weird has ouccerd");
@@ -198,6 +202,7 @@ namespace mamasbogrim.classes
                 Console.WriteLine("Enter another id or 0 to exit:");
             }
         }
+
         /// <summary>
         /// starts the menu to log in and out of shifts for an employee.
         /// it will start a new shift if the employee is not in a shift
@@ -248,6 +253,11 @@ namespace mamasbogrim.classes
                 Console.WriteLine("Enter another id or 0 to exit:");
             }
         }
+
+        /// <summary>
+        /// get the choosen employee salery.
+        /// </summary>
+        /// <param name="maternityward"></param>
         public static void getEmployeeSalery(Maternityward maternityward)
         {
             Console.WriteLine("Please enter one of the following employee ids: (press 0 to exit)");
@@ -264,7 +274,17 @@ namespace mamasbogrim.classes
                     userInput = int.Parse(newInput);
                     if (userInput != 0)
                     {
-                        Console.WriteLine(maternityward.EmployeeList[userInput - 1]);
+                        string salery = maternityward.EmployeeList[userInput - 1].getCurrentMonthSalery().ToString();
+                        string hours = maternityward.EmployeeList[userInput - 1].getTotalWorkingHours().ToString();
+                        string roleName  = maternityward.EmployeeList[userInput - 1].employeeRole.roleName;
+                        string name = maternityward.EmployeeList[userInput - 1].employeeName;
+                        PrintLine();
+                        PrintRow("employee name", "Role", "Working Hours", "Monthly salery");
+                        PrintLine();
+                        PrintRow("", "", "", "");
+                        PrintRow(name, roleName, hours, salery);
+                        PrintRow("", "", "", "");
+                        PrintLine();
                     }
                 }
                 Console.WriteLine("Enter another id or 0 to exit:");
@@ -279,6 +299,48 @@ namespace mamasbogrim.classes
             }
             return returnList;
         }
+
+        /// <summary>
+        /// prints to the screen the choosen employee's year long salery.
+        /// </summary>
+        /// <param name="maternityward"></param>
+        public static void getEmployeeYearlySalery(Maternityward maternityward)
+        {
+            Console.Clear();
+            Console.WriteLine("Please enter one of the following employee ids: (press 0 to exit)");
+            for (int i = 0; i < maternityward.EmployeeList.Count; i++)
+            {
+                Console.WriteLine(smallMergin + (i + 1) + $" - for {maternityward.EmployeeList[i].employeeName}'s current monthly income.");
+            }
+            int userInput = 1;
+            while (userInput != 0)
+            {
+                string newInput = Console.ReadLine();
+                if (isValidInput(newInput, getListFromLength(maternityward.EmployeeList.Count)))
+                {
+                    userInput = int.Parse(newInput);
+                    if (userInput != 0)
+                    {
+                        Dictionary<string, List<Dictionary<string, string>>> yearlySalery = maternityward.EmployeeList[userInput - 1].getYearlySalery();
+                        PrintLine();
+                        PrintRow("employee name", "month", "Working Hours", "Monthly salery");
+                        for (int i = 0; i < yearlySalery.Count; i++)
+                        {
+                            string month = yearlySalery[i.ToString()][0]["month"];
+                            string hours = yearlySalery[i.ToString()][1]["hours"];
+                            string salery = yearlySalery[i.ToString()][2]["salery"];
+                            PrintLine();
+                            PrintRow("", "", "", "");
+                            PrintRow(maternityward.EmployeeList[userInput - 1].employeeName, month, hours, salery);
+                            PrintRow("", "", "", "");
+                            PrintLine();
+                        }
+                        Console.WriteLine("Enter another id or 0 to exit:");
+                    }
+                }
+            }
+        }
+
         public static bool isValidInput(string input, List<int> allowedNumbers)
         {
             try
@@ -305,6 +367,7 @@ namespace mamasbogrim.classes
                 return false;
             }
         }
+
         /// <summary>
         /// checks if a given date string is a valid date.
         /// </summary>
@@ -327,6 +390,7 @@ namespace mamasbogrim.classes
             }
            
         }
+
         /// <summary>
         /// checks if given start time is grater then given end time.
         /// </summary>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Configuration;
+using System.Data.SQLite;
 
 namespace mamasbogrim.classes
 {
@@ -47,6 +47,7 @@ namespace mamasbogrim.classes
 
         /// <summary>
         /// This method query's the db.
+        /// Parses the data and returns a dict.
         /// </summary>
         /// <param name="queryString">The SQL statement to execute.</param>
         /// <returns>The query result as a formated dictionery.</returns>
